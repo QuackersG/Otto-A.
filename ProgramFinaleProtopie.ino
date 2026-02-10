@@ -387,7 +387,6 @@ void readSensors() {
 void drawFrame(int x, int y, int w, int h, const unsigned char *bmp) {
   u8g2.firstPage();
   do {
-    // Ora usiamo i parametri passati invece di quelli fissi IMG_W e IMG_H
     u8g2.drawXBMP(x, y, w, h, bmp);
   } while (u8g2.nextPage());
 }
@@ -421,7 +420,6 @@ void write(const String &text, int stepSize) {
       const char* p = text.c_str();
 
       while (*p != '\0' && currentY < u8g2.getDisplayHeight() && charsPrinted < charLimit) {
-        // 1. Trova la fine della parola
         const char* end = p;
         while (*end != ' ' && *end != '\0') end++;
         int wordLen = end - p;
@@ -433,13 +431,11 @@ void write(const String &text, int stepSize) {
 
         int16_t wordWidth = u8g2.getStrWidth(wordBuffer);
 
-        // 2. Word Wrap: Vai a capo se la parola non ci sta
         if (currentX + wordWidth > u8g2.getDisplayWidth() && currentX != 0) {
           currentX = 0;
           currentY += lineHeight;
         }
 
-        // 3. Disegna le lettere fino al limite del "macchina da scrivere"
         if (currentY < u8g2.getDisplayHeight()) {
           u8g2.setCursor(currentX, currentY);
           for (int i = 0; i < wordLen; i++) {
@@ -449,7 +445,7 @@ void write(const String &text, int stepSize) {
             }
           }
           currentX += wordWidth + u8g2.getStrWidth(" ");
-          charsPrinted++; // Conta lo spazio come carattere stampato
+          charsPrinted++;
         }
         
         p = end;
